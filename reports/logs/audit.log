@@ -1,0 +1,4 @@
+# Audit Log for Auron Agent
+# Format: ISO8601 UTC | EVENT_TYPE | details
+2026-06-17T19:56:00Z | AGENT_CREATED | auron-test-review.yml added to .github/agents
+2026-06-17T20:05:00Z | PR_TRIGGER | pr=12; branch=test/auron-agent-check; user=Shorxi
