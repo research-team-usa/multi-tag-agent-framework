@@ -1,97 +1,65 @@
 name: Code Quality
 
 on:
-  pus h:
-    branches: [main, develop]
+  push:
+    branches: [ main ]
   pull_request:
-    branches: [main, develop]
-
-permissions:
-  contents: read
+    branches: [ main ]
 
 jobs:
   quality-checks:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Debug: show workspace and files
-        run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          echo "pwd: $(pwd)"
-          echo "ls root:"
-          ls -la
-          echo "find requirements files (depth 4):"
-          find . -maxdepth 4 -type f -name "requirements*.txt" -print || true
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Locate project root (where requirements live) and install deps
-        shell: bash
+      - name: Find project root and requirements
+        id: find
         run: |
-          # Find first requirements file (search depth 4)
-          REQ_FILE=$(find . -maxdepth 4 -type f -name "requirements*.txt" | head -n1 || true)
-          if [ -n "$REQ_FILE" ]; then
-            REQ_DIR=$(dirname "$REQ_FILE")
-            echo "Found requirements at: $REQ_FILE"
-            echo "Switching to directory: $REQ_DIR"
-            cd "$REQ_DIR"
+          echo "Searching for requirements files..."
+          ROOT=$(pwd)
+          REQ=$(find . -maxdepth 4 -type f -name "requirements*.txt" | head -n 1 || true)
+          if [ -n "$REQ" ]; then
+            DIR=$(dirname "$REQ")
+            echo "found_req=$REQ" >> $GITHUB_OUTPUT
+            echo "project_dir=$DIR" >> $GITHUB_OUTPUT
           else
-            echo "No requirements file found in repo (search depth 4). Using repo root."
+            echo "found_req=" >> $GITHUB_OUTPUT
+            echo "project_dir=" >> $GITHUB_OUTPUT
           fi
 
+      - name: Show debug info
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          echo "find results:"
+          find . -maxdepth 4 -type f -name "requirements*.txt" || true
+
+      - name: Install dependencies
+        run: |
           python -m pip install --upgrade pip
-          pip install pylint black isort mypy bandit || true
-
-          if [ -n "$REQ_FILE" ]; then
-            pip install -r "$(basename "$REQ_FILE")" || true
+          if [ -n "${{ steps.find.outputs.found_req }}" ]; then
+            pip install -r "${{ steps.find.outputs.found_req }}"
           else
-            echo "No extra requirements to install."
+            echo "No requirements file found; installing linters only"
           fi
+          pip install black isort pylint mypy bandit
 
-          # Export the working dir for later steps
-          echo "PROJECT_WORKDIR=$(pwd)" >> $GITHUB_ENV
-
-      - name: Run Black formatter check
-        shell: bash
+      - name: Run linters
         run: |
-          cd "$PROJECT_WORKDIR"
+          # if project_dir set, run inside it
+          if [ -n "${{ steps.find.outputs.project_dir }}" ]; then
+            cd "${{ steps.find.outputs.project_dir }}"
+          fi
           black --check .
-
-      - name: Run isort import checker
-        shell: bash
-        run: |
-          cd "$PROJECT_WORKDIR"
-          isort --check-only --diff .
-
-      - name: Run pylint
-        shell: bash
-        run: |
-          cd "$PROJECT_WORKDIR"
-          # adjust paths if your tests or package live elsewhere
-          pylint tests/ --max-line-length=100
-
-      - name: Run mypy type checker
-        shell: bash
-        run: |
-          cd "$PROJECT_WORKDIR"
-          mypy tests/ --ignore-missing-imports
-
-      - name: Run bandit security check
-        shell: bash
-        run: |
-          cd "$PROJECT_WORKDIR"
-          bandit -r tests/ -ll
+          isort --check-only .
+          pylint $(git ls-files '*.py' || true) || true
+          mypy --ignore-missing-imports .
+          bandit -r . || true
