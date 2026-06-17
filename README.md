@@ -30,7 +30,7 @@ All formal specifications and architectural documentation are stored in the `Mul
 | **Amplifier Policy** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent-System–Amplifier_Policy_Document_v1.0.pdf) |
 | **Test Suite Spec** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent-System–Test_Suite_Specification_v1.0.pdf) |
 | **Edge Cases & Security**| [View PDF](Multi-Tag_Agent-System–Edge_Cases_&_Security.pdf) |
-| **Developer README** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–Developer_README_v1.0.pdf) |
+| **Developer README** | [View PDF](Multi-Tag_Agent-System–Developer_READM_v1.0.pdf) |
 
 ---
 
