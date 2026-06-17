@@ -6,36 +6,88 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   quality-checks:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      # 1) Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      # 2) Debug: show workspace and files (helps diagnose missing files)
+      - name: Debug: show workspace and files
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "pwd: $(pwd)"
+          echo "ls root:"
+          ls -la
+          echo "find requirements files (depth 3):"
+          find . -maxdepth 3 -type f -name "requirements*.txt" -print || true
+
+      # 3) Setup Python with pip cache
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
           cache: "pip"
 
-      - name: Install dependencies
+      # 4) Optional: cache pip wheel/cache (extra speed)
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # 5) Install dependencies (robust + informative)
+      - name: Install dependencies (robust)
         run: |
+          echo "Working dir: $(pwd)"
           python -m pip install --upgrade pip
-          pip install pylint black isort mypy bandit
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Install linters/tools first (best-effort)
+          pip install pylint black isort mypy bandit || true
 
+          # Prefer requirements.txt in repo root; fallback to requirements-test.txt
+          if [ -f "./requirements.txt" ]; then
+            echo "Found requirements.txt in repo root, installing..."
+            pip install -r ./requirements.txt
+          elif [ -f "./requirements-test.txt" ]; then
+            echo "Found requirements-test.txt in repo root, installing..."
+            pip install -r ./requirements-test.txt
+          else
+            echo "No requirements file found in repo root. Continuing without installing extra deps."
+          fi
+
+      # 6) Run Black (fail the job if formatting issues exist)
       - name: Run Black formatter check
-        run: black --check --diff . || true
+        run: |
+          echo "Running black --check"
+          black --check . 
 
+      # 7) Run isort (fail the job if import order issues exist)
       - name: Run isort import checker
-        run: isort --check-only --diff . || true
+        run: |
+          echo "Running isort --check-only"
+          isort --check-only --diff .
 
+      # 8) Run pylint (targeting src/tests; adjust path if needed)
       - name: Run pylint
-        run: pylint tests/ --exit-zero --max-line-length=100 || true
+        run: |
+          echo "Running pylint on tests/ and project package (adjust paths if needed)"
+          pylint tests/ --max-line-length=100
 
+      # 9) Run mypy (type checking)
       - name: Run mypy type checker
-        run: mypy tests/ --ignore-missing-imports || true
+        run: |
+          echo "Running mypy on tests/ (ignore missing imports to avoid false positives)"
+          mypy tests/ --ignore-missing-imports
 
+      # 10) Run bandit (security)
       - name: Run bandit security check
-        run: bandit -r tests/ -ll || true
+        run: |
+          echo "Running bandit security scan"
+          bandit -r tests/ -ll
