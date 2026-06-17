@@ -13,28 +13,24 @@ jobs:
   quality-checks:
     runs-on: ubuntu-latest
     steps:
-      # 1) Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Debug: show workspace and files (helps diagnose missing files)
       - name: Debug: show workspace and files
         run: |
           echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
           echo "pwd: $(pwd)"
           echo "ls root:"
           ls -la
-          echo "find requirements files (depth 3):"
-          find . -maxdepth 3 -type f -name "requirements*.txt" -print || true
+          echo "find requirements files (depth 4):"
+          find . -maxdepth 4 -type f -name "requirements*.txt" -print || true
 
-      # 3) Setup Python with pip cache
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
           cache: "pip"
 
-      # 4) Optional: cache pip wheel/cache (extra speed)
       - name: Cache pip
         uses: actions/cache@v4
         with:
@@ -43,51 +39,59 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # 5) Install dependencies (robust + informative)
-      - name: Install dependencies (robust)
+      - name: Locate project root (where requirements live) and install deps
+        shell: bash
         run: |
-          echo "Working dir: $(pwd)"
-          python -m pip install --upgrade pip
-          # Install linters/tools first (best-effort)
-          pip install pylint black isort mypy bandit || true
-
-          # Prefer requirements.txt in repo root; fallback to requirements-test.txt
-          if [ -f "./requirements.txt" ]; then
-            echo "Found requirements.txt in repo root, installing..."
-            pip install -r ./requirements.txt
-          elif [ -f "./requirements-test.txt" ]; then
-            echo "Found requirements-test.txt in repo root, installing..."
-            pip install -r ./requirements-test.txt
+          # Find first requirements file (search depth 4)
+          REQ_FILE=$(find . -maxdepth 4 -type f -name "requirements*.txt" | head -n1 || true)
+          if [ -n "$REQ_FILE" ]; then
+            REQ_DIR=$(dirname "$REQ_FILE")
+            echo "Found requirements at: $REQ_FILE"
+            echo "Switching to directory: $REQ_DIR"
+            cd "$REQ_DIR"
           else
-            echo "No requirements file found in repo root. Continuing without installing extra deps."
+            echo "No requirements file found in repo (search depth 4). Using repo root."
           fi
 
-      # 6) Run Black (fail the job if formatting issues exist)
-      - name: Run Black formatter check
-        run: |
-          echo "Running black --check"
-          black --check . 
+          python -m pip install --upgrade pip
+          pip install pylint black isort mypy bandit || true
 
-      # 7) Run isort (fail the job if import order issues exist)
-      - name: Run isort import checker
+          if [ -n "$REQ_FILE" ]; then
+            pip install -r "$(basename "$REQ_FILE")" || true
+          else
+            echo "No extra requirements to install."
+          fi
+
+          # Export the working dir for later steps
+          echo "PROJECT_WORKDIR=$(pwd)" >> $GITHUB_ENV
+
+      - name: Run Black formatter check
+        shell: bash
         run: |
-          echo "Running isort --check-only"
+          cd "$PROJECT_WORKDIR"
+          black --check .
+
+      - name: Run isort import checker
+        shell: bash
+        run: |
+          cd "$PROJECT_WORKDIR"
           isort --check-only --diff .
 
-      # 8) Run pylint (targeting src/tests; adjust path if needed)
       - name: Run pylint
+        shell: bash
         run: |
-          echo "Running pylint on tests/ and project package (adjust paths if needed)"
+          cd "$PROJECT_WORKDIR"
+          # adjust paths if your tests or package live elsewhere
           pylint tests/ --max-line-length=100
 
-      # 9) Run mypy (type checking)
       - name: Run mypy type checker
+        shell: bash
         run: |
-          echo "Running mypy on tests/ (ignore missing imports to avoid false positives)"
+          cd "$PROJECT_WORKDIR"
           mypy tests/ --ignore-missing-imports
 
-      # 10) Run bandit (security)
       - name: Run bandit security check
+        shell: bash
         run: |
-          echo "Running bandit security scan"
+          cd "$PROJECT_WORKDIR"
           bandit -r tests/ -ll
