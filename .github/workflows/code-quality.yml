@@ -1,7 +1,7 @@
 name: Code Quality
 
 on:
-  push:
+  pus h:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
