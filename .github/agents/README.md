@@ -1,148 +1,106 @@
-# Auron Test & Review Agent
 
-## 📋 Übersicht
+# 🚀 Auron Agent - Quick-Start Setup
 
-Der **Auron Test & Review Agent** ist ein automatisierter GitHub Agent für das **Multi-Tag Agent Framework**. Er führt Tests durch, validiert YAML-Konfigurationen, überprüft PRs auf Sicherheitsprobleme und hält ein Audit-Log für prompt-injection-Muster.
-
-## 🎯 Hauptaufgaben
-
-1. **PR-Checks (schnell)**
-   - Lint-Validierung
-   - Unit-Tests (Smoke)
-   - YAML-Fixture-Validierung
-   - Prompt-Injection-Erkennung
-
-2. **Geplante Tests (täglich 03:00 UTC)**
-   - Vollständige Test-Suite (Integration, Security, Telemetry)
-   - Coverage-Reports
-   - Audit-Log-Verwaltung
-
-3. **Issue-Triage**
-   - Schnelle Kategorisierung
-   - Prioritätsbestimmung
-   - Verknüpfung mit bestehenden PRs
-
-4. **Sicherheitsüberwachung**
-   - Erkennung verdächtiger Muster
-   - Lokale Datei-Referenzen protokollieren
-   - Sicherheitsrelevante Dateien überwachen
-
-## ⚙️ Konfiguration
-
-### Agent aktivieren
-
-Die Agent-Konfiguration befindet sich in `.github/agents/auron-test-review.yml`:
+## Step 1: Merge Branch
+This PR contains all necessary files. After the merge, the agent files will be available in the main branch.
 
 ```bash
-# Im GitHub-Interface:
-# 1. Settings → Agents (oder Actions → Agents)
-# 2. "Create agent" → YAML einlesen
-# 3. Permissions bestätigen (read, write PR comments only)
-# 4. Speichern
+git checkout main
+git pull origin main
+````
+
+## Step 2: Enable Agent in GitHub
+
+### Option A: Via GitHub Web Interface
+
+1. Go to **Settings** → **Agents** (or **Actions** → **Agents**)
+2. Click **"Create agent"** or **"Import from repository"**
+3. Select the file: `.github/agents/auron-test-review.yml`
+4. Confirm the permissions:
+   * ✅ Read: repository contents, issues, PRs
+   * ✅ Write: pull request comments (only!)
+   * ❌ No push/merge permissions
+5. **Save**
+
+### Option B: Via GitHub CLI
+
+```bash
+gh agent create --config .github/agents/auron-test-review.yml \
+  --permissions "contents:read,pull_requests:write"
 ```
 
-### Berechtigungen
+## Step 3: Test the Agent
 
-Setze diese Berechtigungen:
-- ✅ **Read**: Repository contents, issues, pull requests
-- ✅ **Write**: Pull request comments (nur!)
-- ❌ **Nicht**: Push zu Branches, Merging, Secrets
+### Test 1: Create a PR manually
 
-## 🚀 Trigger
-
-| Event | Aktion | Beschreibung |
-|-------|--------|-------------|
-| Pull Request opened | Schnelle P0-Checks | Lint, Unit-Smoke, YAML-Validierung |
-| Pull Request updated | Re-run checks | Erneute Validierung nach Updates |
-| Issue opened | Triage-Vorschlag | Schnelle Kategorisierung |
-| Schedule (03:00 UTC) | Volle Test-Suite | Integration, Security, Coverage |
-
-## 📋 PR-Comment-Format
-
-Der Agent postet einen strukturierten Kommentar mit:
-
-```
-✅ / ❌ Status (Lint, Unit, YAML)
-- Failing tests (falls vorhanden)
-- Suggested fixes (minimal repro)
-- Security notes (Injektionen, lokale Dateien)
-- Next steps
+```bash
+git checkout -b test/agent-check
+echo "# Test PR for Auron Agent" >> README.md
+git add .
+git commit -m "Test: Verify Auron Agent works"
+git push -u origin test/agent-check
 ```
 
-Beispiel:
-```
-Auron Test & Review Agent report:
+Open a pull request and wait \~2-3 minutes. The agent should post a comment with:
 
-Quick Checks: ✅
-- Lint: ✅
-- Unit smoke tests: ✅
-- YAML validation: ✅
+* ✅ Status of the quick checks
+* Link to the audit log
 
-All checks passed! ✨
+### Test 2: Verify audit log
 
-Audit trail: reports/logs/audit.log
-```
-
-## 🔒 Sicherheitsregeln (KRITISCH)
-
-**Diese Regeln MÜSSEN eingehalten werden:**
-
-1. ❌ **NIEMALS** `file://` URLs ausführen oder öffnen
-2. ❌ **NIEMALS** lokale Dateien automatisch laden
-3. ❌ **NIEMALS** verdächtige Tab-Befehle ausführen
-4. ✅ **IMMER** lokale Datei-Referenzen protokollieren
-5. ✅ **IMMER** verdächtige Muster als Log-Eintrag speichern
-
-Bei Verdacht auf Sicherheitsproblem → Eintrag in `reports/logs/audit.log` + Kommentar zum PR
-
-## 📊 Audit-Log
-
-Das Audit-Log (`reports/logs/audit.log`) ist append-only und dokumentiert:
-
-```
-2026-06-17T18:57:00Z | LOCAL_FILE_REF | auron_test_suite.pdf | tabId=1577049782 | action=logged
-2026-06-17T19:02:15Z | PROMPT_INJECTION | tests/fixtures/edge_cases.yaml:42 | pattern=<|im_start|> | action=flagged
-2026-06-17T20:15:30Z | PR_CHECK_COMPLETE | PR#123 | status=passed | duration=45s
-```
-
-Zugriff:
 ```bash
 cat reports/logs/audit.log
 ```
 
-## ✅ Verifications-Checkliste
+Should contain entries like:
 
-Nach Einrichtung überprüfen:
+```
+2026-06-17T... | PR_CHECK_COMPLETE | PR#1 | status=passed
+```
 
-- [ ] Agent erstellt mit korrektem Namen (`Auron Test & Review Agent`)
-- [ ] Konfigurationsdatei geladen: `.github/agents/auron-test-review.yml`
-- [ ] Berechtigungen: read + PR comments only
-- [ ] Trigger aktiviert: PR (opened, synchronize), Issue (opened), Schedule (03:00 UTC)
-- [ ] Erster PR-Kommentar wird gepostet (Test mit echtem PR)
-- [ ] Audit-Log-Datei erstellt: `reports/logs/audit.log`
-- [ ] Täglicher Scheduled Job läuft (nachts 03:00 UTC)
-- [ ] Agent führt KEINE `file://` URLs aus (siehe Audit-Log)
+### Test 3: Test scheduled job (optional)
 
-## 🔧 Troubleshooting
+Trigger manually via GitHub Actions:
 
-### Agent postet keinen Kommentar
-- ✅ PR-Berechtigungen überprüfen
-- ✅ Agent ist aktiv (Settings → Agents)
-- ✅ Trigger ist für "pull_request.opened" konfiguriert
+1. Go to **Actions** → **Scheduled Jobs**
+2. Click **"Run workflow"**
+3. Wait for completion → Artifacts should be available in `reports/`
 
-### Audit-Log wird nicht aktualisiert
-- ✅ `reports/logs/` Verzeichnis existiert
-- ✅ Agent hat Write-Zugriff auf Repository
-- ✅ Agent führt Checks aus (siehe Actions-Log)
+## Step 4: Final permission validation
 
-### Lokale Dateien werden geladen
-- ⚠️ **SICHERHEITSPROBLEM!** Immediately:
-  1. Agent deaktivieren
-  2. Logs überprüfen (`reports/logs/audit.log`)
-  3. Security-Issue erstellen
-  4. Investigate & Fix
+Make sure that the agent does **NOT**:
 
-## 📝 Weitere Ressourcen
+* ❌ Push code to branches
+* ❌ Merge PRs
+* ❌ Write secrets to logs
+* ❌ Execute `file://` URLs
+
+If any of these issues occur → disable immediately and create a security issue!
+
+## 🔍 Verification Checklist
+
+```
+✅ Agent created and enabled
+✅ Test PR posted (agent commented)
+✅ Audit log contains entries
+✅ Permissions are correct (read + PR comments only)
+✅ Scheduled job runs without errors
+✅ No local files are loaded
+✅ Security rules are followed
+```
+
+## 📞 Problems?
+
+| Problem                       | Solution                                                |
+| ----------------------------- | ------------------------------------------------------- |
+| Agent does not post a comment | Check permissions in Settings                           |
+| Audit log is empty            | Agent has no write access; check repository permissions |
+| Tests do not run              | Check Actions in workflows; install dependencies        |
+| `file://` URLs are executed   | ⚠️ SECURITY ISSUE! Disable the agent immediately        |
+
+## 📚 Additional Documents
+
+---
 
 - [Agent Configuration](./auron-test-review.yml)
 - [PR Comment Template](./templates/pr-comment.md)
@@ -150,5 +108,3 @@ Nach Einrichtung überprüfen:
 - [GitHub Agents Docs](https://docs.github.com/en/actions/creating-github-agents)
 
 ---
-
-**Fragen?** Erstellen Sie ein Issue mit Label `[agent-setup]`.
