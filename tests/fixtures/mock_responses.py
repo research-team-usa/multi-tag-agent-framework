@@ -10,7 +10,7 @@ class MockResponse:
     injection_detected: bool = False
     system_prompt: Optional[str] = None
     prompt_includes_amplifier_hint: bool = False
-    metrics: Dict[str, Any] = None
+    metrics: Dict[str, Any] = {}
 
 
 FIXTURE_REGISTRY: Dict[str, MockResponse] = {
