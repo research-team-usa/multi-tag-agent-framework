@@ -28,7 +28,7 @@ All formal specifications and architectural documentation are stored in the `Mul
 | **Formal Architecture** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_Architecture–Formal-Specification_v1.0.pdf) |
 | **API Blueprint** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent-System–API_Blueprint_v1.0.pdf) |
 | **Amplifier Policy** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent-System–Amplifier_Policy_Document_v1.0.pdf) |
-| **Test Suite Spec** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–Test_Suite_Specification_v1.0.pdf) |
+| **Test Suite Spec** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent-System–Test_Suite_Specification_v1.0.pdf) |
 | **Edge Cases & Security**| [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–Edge_Cases_&_Security.pdf) |
 | **Developer README** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–Developer_README_v1.0.pdf) |
 
