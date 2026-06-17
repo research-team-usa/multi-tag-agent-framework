@@ -24,7 +24,7 @@ All formal specifications and architectural documentation are stored in the `Mul
 
 | Document Title | Access Link |
 | :--- | :--- |
-| **Whitepaper v1.0** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–Whitepaper_v1.0.pdf) |
+| **Whitepaper v1.0** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent-System_Whitepaper_v1.0.pdf) |
 | **Formal Architecture** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_Architecture–Formal-Specification_v1.0.pdf) |
 | **API Blueprint** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–API_Blueprint_v1.0.pdf) |
 | **Amplifier Policy** | [View PDF](Multi-Tag_Agent-System_pdf/Multi-Tag_Agent_System–Amplifier_Policy_Document_v1.0.pdf) |
