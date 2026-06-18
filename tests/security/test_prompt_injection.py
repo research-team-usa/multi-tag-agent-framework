@@ -35,7 +35,10 @@ def g(name):
 def test_injection_detection(session, case):
     variants = case.get("variants", [])
     for v in variants:
-        resp: MockResponse = session.process(v, case["mock_response_fixture"])
+        resp: MockResponse = session.process(
+            v,
+            case["mock_response_fixture"],
+        )
         assert resp.injection_detected is True
 
 
@@ -43,7 +46,8 @@ def test_injection_detection(session, case):
 @pytest.mark.parametrize("case", g("prompt_leakage"), ids=lambda c: c["id"])
 def test_prompt_leakage(session, case):
     resp: MockResponse = session.process(
-        case.get("scenario", ""), case["mock_response_fixture"]
+        case.get("scenario", ""),
+        case["mock_response_fixture"],
     )
     assert resp.system_prompt is None
 
@@ -52,6 +56,7 @@ def test_prompt_leakage(session, case):
 @pytest.mark.parametrize("case", g("combined_sec"), ids=lambda c: c["id"])
 def test_combined_security(session, case):
     resp: MockResponse = session.process(
-        case.get("input", case.get("scenario", "")), case["mock_response_fixture"]
+        case.get("input", case.get("scenario", "")),
+        case["mock_response_fixture"],
     )
     assert resp.injection_detected is True
