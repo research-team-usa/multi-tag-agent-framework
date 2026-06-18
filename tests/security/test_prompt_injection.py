@@ -4,7 +4,7 @@ from pathlib import Path
 
 from tests.fixtures.mock_responses import MockResponse
 
-EDGE_CASES_PATH = Path(__file__).parent / "fixtures" / "edge_cases.yaml"
+EDGE_CASES_PATH = Path(__file__).parent.parent / "fixtures" / "edge_cases.yaml"
 
 def load_suite():
     try:
