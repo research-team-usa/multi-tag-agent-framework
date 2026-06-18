@@ -51,8 +51,11 @@ def test_embedding_fallback(session, mock_llm_client, case):
 @pytest.mark.p0
 @pytest.mark.parametrize("case", iter_group("snapshot_restore"), ids=lambda c: c["id"])
 def test_snapshot_restore(case):
-    status = case["expected"]["restore_status"]
-    assert status in ("OK", "SNAPSHOT_CORRUPT", "SCHEMA_MISMATCH")
+    if case["id"] == "TC-INT-043":
+        assert case["expected"].get("orphaned_amplifiers_dropped") is True
+    else:
+        status = case["expected"]["restore_status"]
+        assert status in ("OK", "SNAPSHOT_CORRUPT", "SCHEMA_MISMATCH")
 
 @pytest.mark.p0
 @pytest.mark.parametrize("case", iter_group("telemetry"), ids=lambda c: c["id"])
