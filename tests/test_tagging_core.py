@@ -6,6 +6,7 @@ Tests for tag creation, validation, and basic operations.
 
 import pytest
 
+
 class TestTagCreation:
     """Tests for tag creation and initialization."""
 
@@ -46,6 +47,7 @@ class TestTagCreation:
             return False
         return color.startswith("#") and len(color) == 7
 
+
 class TestTagValidation:
     """Tests for tag validation logic."""
 
@@ -59,7 +61,7 @@ class TestTagValidation:
         max_length = 50
         short_name = "a" * 30
         long_name = "a" * 100
-        
+
         assert len(short_name) <= max_length
         assert len(long_name) > max_length
 
@@ -67,16 +69,17 @@ class TestTagValidation:
         """Test detection of duplicate tags."""
         tags = ["security", "feature", "bug"]
         new_tag = "security"
-        
+
         assert new_tag in tags
 
     def test_tag_uniqueness_in_set(self):
         """Test that tags maintain uniqueness in a set."""
         tag_set = {"security", "feature", "bug"}
         assert len(tag_set) == 3
-        
+
         tag_set.add("security")
         assert len(tag_set) == 3
+
 
 class TestTagRelationships:
     """Tests for tag relationships and hierarchies."""
@@ -85,22 +88,23 @@ class TestTagRelationships:
         """Test creating parent-child tag relationships."""
         parent = {"name": "urgent", "id": "1"}
         child = {"name": "critical-bug", "id": "2", "parent_id": "1"}
-        
+
         assert child["parent_id"] == parent["id"]
 
     def test_tag_hierarchy_depth(self):
         """Test validation of tag hierarchy depth."""
         max_depth = 5
         hierarchy = ["root", "level1", "level2", "level3", "level4"]
-        
+
         assert len(hierarchy) <= max_depth
 
     def test_tag_hierarchy_invalid_depth(self):
         """Test that deep hierarchies are rejected."""
         max_depth = 5
         deep_hierarchy = ["root", "l1", "l2", "l3", "l4", "l5", "l6"]
-        
+
         assert len(deep_hierarchy) > max_depth
+
 
 class TestTagFiltering:
     """Tests for tag filtering operations."""
@@ -109,7 +113,7 @@ class TestTagFiltering:
         """Test filtering tags by name prefix."""
         tags = ["security-critical", "security-medium", "performance-high", "bug-low"]
         security_tags = [t for t in tags if t.startswith("security")]
-        
+
         assert len(security_tags) == 2
         assert "security-critical" in security_tags
 
@@ -121,8 +125,9 @@ class TestTagFiltering:
             {"name": "tag3", "priority": "high"},
         ]
         high_priority = [t for t in tags if t.get("priority") == "high"]
-        
+
         assert len(high_priority) == 2
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
