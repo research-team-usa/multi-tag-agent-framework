@@ -19,7 +19,7 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-test.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run P0 tests
         run: pytest tests/ -m "p0" -x -q
 
@@ -38,7 +38,7 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-test.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run full suite with coverage
         run: |
           pytest tests/ --cov=src --cov-report=term-missing -q
@@ -58,7 +58,7 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-test.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Run nightly with HTML report
         run: |
           pytest tests/ --cov=src --cov-report=html:reports/htmlcov \
