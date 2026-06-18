@@ -21,6 +21,7 @@ locust>=2.29,<3             # load test runner (used in p2 / nightly)
 
 # ── Security scanning helpers ────────────────────────────────────────────────
 bandit>=1.7,<2              # static security linting (run in security job)
+pyyaml>=6.0,<7              # yaml parsing for edge cases
 
 # ── Snapshot / golden-file testing ──────────────────────────────────────────
 syrupy>=4.7,<5              # snapshot assertions
