@@ -1,10 +1,11 @@
-﻿# isort: skip_file
+# isort: skip_file
 from pathlib import Path
 
 import pytest
 import yaml
 
 from tests.fixtures.mock_responses import MockResponse
+
 
 EDGE_CASES_PATH = Path(__file__).parent.parent / "fixtures" / "edge_cases.yaml"
 
