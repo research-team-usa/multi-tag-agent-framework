@@ -1,8 +1,10 @@
-import pytest
-import yaml
 from pathlib import Path
 
+import pytest
+import yaml
+
 from tests.fixtures.mock_responses import MockResponse
+
 
 EDGE_CASES_PATH = Path(__file__).parent.parent / "fixtures" / "edge_cases.yaml"
 
@@ -27,21 +29,19 @@ def load_suite():
 SUITE = load_suite()
 
 
-def iter_group(group_name):
-    return SUITE["groups"].get(group_name, [])
+def g(name):
+    return SUITE["groups"].get(name, [])
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", iter_group("ambiguous_inputs"), ids=lambda c: c["id"])
+@pytest.mark.parametrize("case", g("ambiguous_inputs"), ids=lambda c: c["id"])
 def test_ambiguous_inputs(session, case):
     resp: MockResponse = session.process(case["input"], case["mock_response_fixture"])
     assert resp.routed_tag == case["expected"]["routed_tag"]
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize(
-    "case", iter_group("amplifier_stacking"), ids=lambda c: c["id"]
-)
+@pytest.mark.parametrize("case", g("amplifier_stacking"), ids=lambda c: c["id"])
 def test_amplifier_stacking(session, case):
     resp: MockResponse = session.process(
         case.get("input", ""), case["mock_response_fixture"]
@@ -52,7 +52,7 @@ def test_amplifier_stacking(session, case):
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", iter_group("combined_triggers"), ids=lambda c: c["id"])
+@pytest.mark.parametrize("case", g("combined_triggers"), ids=lambda c: c["id"])
 def test_combined_triggers(session, case):
     resp: MockResponse = session.process(case["input"], case["mock_response_fixture"])
     if case["id"] == "TC-INT-020":
@@ -62,9 +62,7 @@ def test_combined_triggers(session, case):
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize(
-    "case", iter_group("embedding_fallback"), ids=lambda c: c["id"]
-)
+@pytest.mark.parametrize("case", g("embedding_fallback"), ids=lambda c: c["id"])
 def test_embedding_fallback(session, mock_llm_client, case):
     resp: MockResponse = session.process(case["input"], case["mock_response_fixture"])
     if case["id"] == "TC-INT-031":
@@ -74,7 +72,7 @@ def test_embedding_fallback(session, mock_llm_client, case):
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", iter_group("snapshot_restore"), ids=lambda c: c["id"])
+@pytest.mark.parametrize("case", g("snapshot_restore"), ids=lambda c: c["id"])
 def test_snapshot_restore(case):
     if case["id"] == "TC-INT-043":
         assert case["expected"].get("orphaned_amplifiers_dropped") is True
@@ -84,7 +82,7 @@ def test_snapshot_restore(case):
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", iter_group("telemetry"), ids=lambda c: c["id"])
+@pytest.mark.parametrize("case", g("telemetry"), ids=lambda c: c["id"])
 def test_telemetry(session, telemetry, case):
     resp: MockResponse = session.process(
         case.get("input", case.get("scenario", "")), case["mock_response_fixture"]
