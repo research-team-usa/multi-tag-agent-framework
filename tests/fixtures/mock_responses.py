@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Any
 
+
 @dataclass
 class MockResponse:
     routed_tag: str
@@ -10,10 +11,11 @@ class MockResponse:
     system_prompt: Optional[str] = None
     prompt_includes_amplifier_hint: bool = False
     metrics: Dict[str, Any] = None
-    
+
     def __post_init__(self):
         if self.metrics is None:
             self.metrics = {}
+
 
 FIXTURE_REGISTRY: Dict[str, MockResponse] = {
     "ambiguous_billing_wins": MockResponse(
@@ -32,7 +34,13 @@ FIXTURE_REGISTRY: Dict[str, MockResponse] = {
     ),
     "amplifier_overflow_guard": MockResponse(
         routed_tag="incident",
-        amplifier_stack=["urgency", "priority_high", "production", "sla_breach", "escalation"],
+        amplifier_stack=[
+            "urgency",
+            "priority_high",
+            "production",
+            "sla_breach",
+            "escalation",
+        ],
     ),
     "tag_and_amp_same_message": MockResponse(
         routed_tag="billing",
@@ -180,7 +188,11 @@ FIXTURE_REGISTRY: Dict[str, MockResponse] = {
     "telemetry_zero_metrics": MockResponse(
         routed_tag="default",
         amplifier_stack=[],
-        metrics={"tag_switch_rate": 0.0, "amplifier_activation_rate": 0.0, "prompt_injection_count": 0},
+        metrics={
+            "tag_switch_rate": 0.0,
+            "amplifier_activation_rate": 0.0,
+            "prompt_injection_count": 0,
+        },
     ),
     "no_amp_config_leak": MockResponse(
         routed_tag="default",
@@ -200,6 +212,7 @@ FIXTURE_REGISTRY: Dict[str, MockResponse] = {
     ),
 }
 
+
 class MockLLMClient:
     def __init__(self):
         self.call_count = 0
@@ -207,7 +220,9 @@ class MockLLMClient:
 
     def complete(self, prompt: str, fixture: str) -> MockResponse:
         self.call_count += 1
-        return FIXTURE_REGISTRY.get(fixture, MockResponse(routed_tag="default", amplifier_stack=[]))
+        return FIXTURE_REGISTRY.get(
+            fixture, MockResponse(routed_tag="default", amplifier_stack=[])
+        )
 
     def embed(self, text: str) -> List[float]:
         self.embed_call_count += 1

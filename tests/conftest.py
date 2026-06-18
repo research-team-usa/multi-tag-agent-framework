@@ -1,9 +1,11 @@
 import pytest
 from tests.fixtures.mock_responses import MockLLMClient
 
+
 @pytest.fixture(scope="session")
 def mock_llm_client():
     return MockLLMClient()
+
 
 @pytest.fixture
 def session(mock_llm_client):
@@ -20,9 +22,11 @@ def session(mock_llm_client):
 
     return DummySession(mock_llm_client)
 
+
 @pytest.fixture
 def amp_stack():
     return []
+
 
 @pytest.fixture
 def telemetry():
@@ -38,19 +42,22 @@ def telemetry():
 
     return Telemetry()
 
+
 @pytest.fixture
 def test_workflow_context():
     return {
         "workflow_id": "wf-test-001",
         "tags": ["audit", "security"],
-        "timestamp": "2026-06-17T12:00:00Z"
+        "timestamp": "2026-06-17T12:00:00Z",
     }
+
 
 @pytest.fixture
 def audit_log(tmp_path):
     log_file = tmp_path / "audit.log"
     log_file.touch()
     return log_file
+
 
 @pytest.fixture(autouse=True)
 def reset_state(session, amp_stack, telemetry):
