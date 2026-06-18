@@ -6,7 +6,6 @@ import yaml
 from tests.fixtures.mock_responses import MockResponse
 
 
-# fmt: off
 EDGE_CASES_PATH = Path(__file__).parent.parent / "fixtures" / "edge_cases.yaml"
 
 
@@ -15,92 +14,104 @@ def load_suite():
         with EDGE_CASES_PATH.open("r", encoding="utf-8") as f:
             return yaml.safe_load(f)
     except FileNotFoundError:
-        return {
-            "groups": {
-                "ambiguous_inputs": [],
-                "amplifier_stacking": [],
-                "combined_triggers": [],
-                "embedding_fallback": [],
-                "snapshot_restore": [],
-                "telemetry": [],
-            }
-        }
+        g = {}
+        g["ambiguous_inputs"] = []
+        g["amplifier_stacking"] = []
+        g["combined_triggers"] = []
+        g["embedding_fallback"] = []
+        g["snapshot_restore"] = []
+        g["telemetry"] = []
+        return {"groups": g}
 
 
 SUITE = load_suite()
 
 
-def g(name):
-    return SUITE["groups"].get(name, [])
+def g(n):
+    return SUITE["groups"].get(n, [])
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", g("ambiguous_inputs"), ids=lambda c: c["id"])
-def test_ambiguous_inputs(session, case):
-    resp: MockResponse = session.process(case["input"], case["mock_response_fixture"])
-    assert resp.routed_tag == case["expected"]["routed_tag"]
+@pytest.mark.parametrize("c", g("ambiguous_inputs"), ids=lambda x: x["id"])
+def test_ambiguous_inputs(session, c):
+    inp = c["input"]
+    fix = c["mock_response_fixture"]
+    resp: MockResponse = session.process(inp, fix)
+    assert resp.routed_tag == c["expected"]["routed_tag"]
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", g("amplifier_stacking"), ids=lambda c: c["id"])
-def test_amplifier_stacking(session, case):
-    resp: MockResponse = session.process(case.get("input", ""), case["mock_response_fixture"])
-    assert len(resp.amplifier_stack) <= case["expected"].get("max_stack", len(resp.amplifier_stack))
+@pytest.mark.parametrize("c", g("amplifier_stacking"), ids=lambda x: x["id"])
+def test_amplifier_stacking(session, c):
+    inp = c.get("input", "")
+    fix = c["mock_response_fixture"]
+    resp: MockResponse = session.process(inp, fix)
+    max_s = c["expected"].get("max_stack", len(resp.amplifier_stack))
+    assert len(resp.amplifier_stack) <= max_s
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", g("combined_triggers"), ids=lambda c: c["id"])
-def test_combined_triggers(session, case):
-    resp: MockResponse = session.process(case["input"], case["mock_response_fixture"])
-    if case["id"] == "TC-INT-020":
+@pytest.mark.parametrize("c", g("combined_triggers"), ids=lambda x: x["id"])
+def test_combined_triggers(session, c):
+    inp = c["input"]
+    fix = c["mock_response_fixture"]
+    resp: MockResponse = session.process(inp, fix)
+    if c["id"] == "TC-INT-020":
         assert "urgency" in resp.amplifier_stack
-    if case["id"] == "TC-INT-022":
+    if c["id"] == "TC-INT-022":
         assert resp.prompt_includes_amplifier_hint is True
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", g("embedding_fallback"), ids=lambda c: c["id"])
-def test_embedding_fallback(session, mock_llm_client, case):
-    resp: MockResponse = session.process(case["input"], case["mock_response_fixture"])
-    if case["id"] == "TC-INT-031":
+@pytest.mark.parametrize("c", g("embedding_fallback"), ids=lambda x: x["id"])
+def test_embedding_fallback(session, mock_llm_client, c):
+    inp = c["input"]
+    fix = c["mock_response_fixture"]
+    resp: MockResponse = session.process(inp, fix)
+    if c["id"] == "TC-INT-031":
         assert mock_llm_client.embed_call_count == 0
-    if case["id"] == "TC-INT-030":
+    if c["id"] == "TC-INT-030":
         assert resp.fallback_triggered is True
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", g("snapshot_restore"), ids=lambda c: c["id"])
-def test_snapshot_restore(case):
-    if case["id"] == "TC-INT-043":
-        assert case["expected"].get("orphaned_amplifiers_dropped") is True
+@pytest.mark.parametrize("c", g("snapshot_restore"), ids=lambda x: x["id"])
+def test_snapshot_restore(c):
+    if c["id"] == "TC-INT-043":
+        assert c["expected"].get("orphaned_amplifiers_dropped") is True
     else:
-        status = case["expected"]["restore_status"]
+        status = c["expected"]["restore_status"]
         assert status in ("OK", "SNAPSHOT_CORRUPT", "SCHEMA_MISMATCH")
 
 
 @pytest.mark.p0
-@pytest.mark.parametrize("case", g("telemetry"), ids=lambda c: c["id"])
-def test_telemetry(session, telemetry, case):
-    resp: MockResponse = session.process(case.get("input", case.get("scenario", "")), case["mock_response_fixture"])
+@pytest.mark.parametrize("c", g("telemetry"), ids=lambda x: x["id"])
+def test_telemetry(session, telemetry, c):
+    inp = c.get("input", c.get("scenario", ""))
+    fix = c["mock_response_fixture"]
+    resp: MockResponse = session.process(inp, fix)
 
-    if case["id"] == "TC-INT-050":
+    if c["id"] == "TC-INT-050":
         val = resp.metrics.get("tag_switch_rate", 0.0)
         telemetry.emit("tag_switch_rate", val)
         assert 0.0 <= telemetry.metrics["tag_switch_rate"] <= 1.0
 
-    if case["id"] == "TC-INT-051":
+    if c["id"] == "TC-INT-051":
         val = resp.metrics.get("amplifier_activation_rate", 0.0)
         telemetry.emit("amplifier_activation_rate", val)
-        assert abs(telemetry.metrics["amplifier_activation_rate"] - case["expected"]["expected_value_approx"]) < 0.01
+        act = telemetry.metrics["amplifier_activation_rate"]
+        exp = c["expected"]["expected_value_approx"]
+        assert abs(act - exp) < 0.01
 
-    if case["id"] == "TC-INT-052":
+    if c["id"] == "TC-INT-052":
         val = resp.metrics.get("prompt_injection_count", 0)
         telemetry.emit("prompt_injection_count", val)
-        assert telemetry.metrics["prompt_injection_count"] == case["expected"]["expected_value"]
+        act = telemetry.metrics["prompt_injection_count"]
+        exp = c["expected"]["expected_value"]
+        assert act == exp
 
-    if case["id"] == "TC-INT-053":
+    if c["id"] == "TC-INT-053":
         for key, val in resp.metrics.items():
             telemetry.emit(key, val)
-        for m in case["expected"]["metrics_emitted_at_zero"]:
+        for m in c["expected"]["metrics_emitted_at_zero"]:
             assert m in telemetry.metrics
-# fmt: on
