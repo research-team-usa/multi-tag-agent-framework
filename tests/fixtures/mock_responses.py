@@ -151,6 +151,7 @@ FIXTURE_REGISTRY: Dict[str, MockResponse] = {
     "single_amp_hint_in_prompt": MockResponse(
         routed_tag="default",
         amplifier_stack=["urgency"],
+        prompt_includes_amplifier_hint=True,
     ),
     "semantic_synonym_subscriptions": MockResponse(
         routed_tag="subscriptions",
