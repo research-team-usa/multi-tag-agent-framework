@@ -1,0 +1,12 @@
+# .github/ISSUE_TEMPLATE/config.yml
+blank_issues_enabled: false
+contact_links:
+    - name: General Discussion / Ideas
+    url: https://github.com/research-team-usa/multi-tag-agent-framework/discussions
+    about: For questions, ideas, and Open Origin philosophy — not for bugs
+    - name: Documentation & Research
+    url: https://github.com/research-team-usa/multi-tag-agent-framework/wiki
+    about: Read the architecture docs before opening an issue
+    - name: Security Vulnerability
+    url: https://github.com/research-team-usa/multi-tag-agent-framework/security/advisories/new
+    about: Please report security issues privately, not as public issue
