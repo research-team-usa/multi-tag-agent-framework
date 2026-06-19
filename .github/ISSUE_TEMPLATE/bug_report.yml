@@ -1,13 +1,13 @@
 name: Bug Report
 description: Report a problem with the multi-tag-agent-framework
-title: "[Bug]:"
+title: "[Bug]: "
 labels: ["bug"]
 body:
-    - type: markdown
-      attributes:
+  - type: markdown
+    attributes:
       value: |
         Thanks for taking the time! Helps us fix Auron's house faster.
-    - type: textarea
+  - type: textarea
     id: what-happened
     attributes:
       label: What happened?
@@ -15,28 +15,28 @@ body:
       placeholder: "When I run X, I get Y..."
     validations:
       required: true
-    - type: textarea
+  - type: textarea
     id: steps
     attributes:
       label: Steps to reproduce
       value: |
-        1.
-        2.
-        3.
+        1. 
+        2. 
+        3. 
     validations:
       required: true
-    - type: textarea
+  - type: textarea
     id: expected
     attributes:
       label: Expected behavior
     validations:
       required: true
-    - type: input
+  - type: input
     id: version
     attributes:
       label: Version / Commit
       placeholder: "main @ abc123"
-    - type: textarea
+  - type: textarea
     id: logs
     attributes:
       label: Logs / Screenshots
