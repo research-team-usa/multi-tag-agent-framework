@@ -71,6 +71,9 @@ This system follows a strict **"Maximal-Ergebnis-Protokoll"**.
 
 *This project is maintained as part of the `research-team-usa` initiative.*
 
+- [Contact](https://github.com/research-team-usa/multi-tag-agent-framework/blob/main/Contact.md)
+- [LICENSE](https://github.com/research-team-usa/multi-tag-agent-framework/blob/main/LICENSE.md)
+---
 
 ### Why this is effective for you:
 1.  **Professionalism:** It immediately highlights your "Formal Specification" and "Whitepaper," giving visitors the impression of a mature, well-thought-out system.
