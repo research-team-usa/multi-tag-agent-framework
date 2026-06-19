@@ -2,6 +2,7 @@
 
 from typing import Dict, List
 
+
 class TagRouter:
     """Route inputs to tags like billing, payments, incident."""
 

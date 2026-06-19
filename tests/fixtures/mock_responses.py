@@ -213,7 +213,6 @@ FIXTURE_REGISTRY: Dict[str, MockResponse] = {
 }
 
 
-
 class MockLLMClient:
     """Deterministic mock LLM client for tests."""
 

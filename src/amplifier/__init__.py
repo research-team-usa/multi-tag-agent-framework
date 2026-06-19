@@ -1,3 +1,3 @@
-from.stack import AmplifierStack
+from .stack import AmplifierStack
 
 __all__ = ["AmplifierStack"]

@@ -3,6 +3,7 @@
 from collections import deque
 from typing import Any, Deque
 
+
 class AmplifierStack:
     """Stack that holds max 5 items – prevents runaway amplification."""
 
