@@ -1,0 +1,45 @@
+name: Feature Request
+description: Suggest an idea for the multi-tag-agent-framework
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+    - type: markdown
+    attributes:
+      value: |
+        Legends don't do things by halves — tell us your idea!
+    - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Why do we need this for Open Origin?
+    validations:
+      required: true
+    - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should it work? Be specific — no shortcuts.
+    validations:
+      required: true
+    - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else did you try?
+    - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the framework?
+      options:
+                - Core Engine
+                - Routing Logic
+                - Agent Orchestration
+                - Security / QA
+                - Documentation
+                - Other
+    - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+                - label: I can submit a PR for this (Maximal-Ergebnis-Protokoll)
