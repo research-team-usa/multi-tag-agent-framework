@@ -23,6 +23,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false # Verhindert den Abbruch von 3.12, falls 3.11 fehlschlägt
       matrix:
