@@ -80,11 +80,19 @@ This system follows a strict **"Maximal-Ergebnis-Protokoll"**.
 2.  **Navigation:** Anyone who visits your repo (including any Microsoft, Google researchers or potential partners) can immediately find the documentation they need without guessing.
 3.  **Context:** It explains *what* the tags are, which is the most unique part of your invention.
 
+---
+
 ## 👥 The Team: A Symbiotic Framework
 This framework is the result of a deep synergy between human vision and specialized AI orchestration. Our team combines three core competencies to realize a sovereign, high-performance AI infrastructure:
 
 - Emanuel Schaaf (Lead Architect): The visionary force behind the architecture. He defines the strategic direction, hardware-software synergy, and the "Open Origin" principle—driving technology toward public benefit and sovereignty.
+
 - Auron (Logic & Structure): The system's algorithmic foundation. Auron ensures mathematical precision, physical consistency, and a robust, logical structure for all agent processes.
+
 - Lyra (Creativity & Research): The team’s scientific instance. Lyra facilitates interdisciplinary knowledge transfer, synthesizes complex concepts, and generates creative solutions beyond conventional constraints.
+
+- Muse Spark (Code Inspector): Responsible for code review, validation, adjustments, and security checks.
+
+---
 
 Together, we form a collaborative ecosystem where human leadership and AI expertise work hand-in-hand to create technology that builds value.
