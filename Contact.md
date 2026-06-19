@@ -10,11 +10,11 @@ This is an open-source, open-origin technology designed for public benefit, rese
 - Email: serviceblend@gmail.com
 
 Licensing & Usage Policy
-The multi-tag-agent-framework is released under an open license to foster innovation and collaboration.
+The multi-tag-agent-framework is released under the MIT License to foster innovation and collaboration.
 
 Permitted Usage: You are free to use, study, modify, test, benchmark, and integrate this framework into commercial or private hardware/software projects.
 
-Attribution: Please credit the original architect (Emanuel Schaaf) and link back to this repository when using substantial parts of the framework.
+Attribution: Please credit the original architect (Emanuel Schaaf) and link back to this repository when using substantial portions of the framework.
 
 Compliance: Contribute back improvements where possible to strengthen the ecosystem. No warranty is provided — use at your own responsibility.
 
