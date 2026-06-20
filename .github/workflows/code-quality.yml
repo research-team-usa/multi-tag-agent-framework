@@ -2,16 +2,16 @@ name: Code Quality
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   format-and-check:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+  
     steps:
          - uses: actions/checkout@v4
         with:
