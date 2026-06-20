@@ -11,27 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-  
+
     steps:
-         - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
-         - name: Set up Python
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
-         - name: Install formatters
+
+      - name: Install formatters
         run: |
           pip install black isort mypy pylint
-      
-         - name: Auto-format code
+
+      - name: Auto-format code
         run: |
           black .
           isort .
-      
-         - name: Commit formatting changes
+
+      - name: Commit formatting changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -39,9 +39,9 @@ jobs:
           git diff --staged --quiet || git commit -m "style: auto-format with black/isort [skip ci]"
           git push
         continue-on-error: true
-      
-         - name: Run mypy
+
+      - name: Run mypy
         run: mypy --ignore-missing-imports .
-      
-         - name: Run pylint
+
+      - name: Run pylint
         run: pylint tests/ --exit-zero
