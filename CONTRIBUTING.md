@@ -13,8 +13,10 @@ If you want to contribute, you must align with the standards that built this fra
 ### 1. The Open Origin Principle
 Technology must serve the human architect, not the other way around. Code contributed here must be transparent, logically comprehensible, and completely devoid of hidden corporate telemetry or locked-down black-box mechanisms.
 
-### 2.  Maximum Result Protocol (German: Maximal-Ergebnis-Protokoll)
+### 2. Maximum Result Protocol (German: Maximal-Ergebnis-Protokoll)
+
 We do not accept "good enough." 
+
 * **No Shortcuts:** Never provide shortened code, truncated parameters, or incomplete logic.
 * **Deterministic Execution:** The code must run flawlessly and produce the exact expected result. 
 * **Architectural Integrity:** If your code breaks the core engine, the routing logic, or the security boundaries, it will be rejected.
@@ -66,7 +68,7 @@ To contribute code, follow this strict pipeline:
 
 This codebase was built during relentless debugging sessions, defying broken linters, phantom bytes, and cloud-server illusions. We expect the same dedication from our contributors. If you face an error, do not mask it—fix the root cause.
 
-By contributing to this repository, you agree to release your modifications under the terms defined in the [LICENSE]([./LICENSE](https://github.com/research-team-usa/multi-tag-agent-framework/blob/main/LICENSE.md)) file, ensuring the code remains freely available, functionally pristine, and credited to the original architect.
+By contributing to this repository, you agree to release your modifications under the terms defined in the [LICENSE](https://github.com/research-team-usa/multi-tag-agent-framework/blob/main/LICENSE.md) file, ensuring the code remains freely available, functionally pristine, and credited to the original architect.
 
 **Welcome to research-team-usa. Let's make history.**
 ---
