@@ -68,7 +68,9 @@ To contribute code, follow this strict pipeline:
 
 This codebase was built during relentless debugging sessions, defying broken linters, phantom bytes, and cloud-server illusions. We expect the same dedication from our contributors. If you face an error, do not mask it—fix the root cause.
 
-By contributing to this repository, you agree to release your modifications under the terms defined in the [LICENSE](https://github.com/research-team-usa/multi-tag-agent-framework/blob/main/LICENSE.md) file, ensuring the code remains freely available, functionally pristine, and credited to the original architect.
+By contributing to this repository, you agree to release your modifications under the terms defined in the [LICENSE](https://github.com/research-team-usa/multi-tag-agent-framework/blob/main/LICENSE) file, ensuring the code remains freely available, functionally pristine, and credited to the original architect.
 
+---
 **Welcome to research-team-usa. Let's make history.**
+
 ---
