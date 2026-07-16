@@ -1,4 +1,3 @@
-<img width="1024" height="1536" alt="Ordner-Struktur" src="https://github.com/user-attachments/assets/97bb69da-90e3-4aeb-90fd-06c77840d059" />
 
 
 # 🤖 Multi-Tag Agent Framework
