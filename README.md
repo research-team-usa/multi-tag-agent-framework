@@ -31,6 +31,7 @@ All formal specifications and architectural documentation are stored in the `Mul
 
 ---
 <img width="1536" height="1024" alt="Copilot_20260803_230851" src="https://github.com/user-attachments/assets/89bf9952-994b-41b4-9547-b967271e2378" />
+“System architecture overview showing the integration between Multi‑Tag Agent Framework and Controller Agent Extension.”
 
 ## 📎 Optional Extension: Controller Agent (System Stability Module)
 
