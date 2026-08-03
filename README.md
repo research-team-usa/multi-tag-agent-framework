@@ -1,6 +1,3 @@
-<img width="1536" height="1024" alt="Copilot_20260803_230851" src="https://github.com/user-attachments/assets/89bf9952-994b-41b4-9547-b967271e2378" />
-
-
 # 🤖 Multi-Tag Agent Framework
 
 Welcome to the **Multi-Tag Agent System** — a high-performance, architecture-driven platform designed for sovereign AI orchestration and hardware-software synergy. 
@@ -33,6 +30,7 @@ All formal specifications and architectural documentation are stored in the `Mul
 | **Developer README** | [View PDF](Multi-Tag_Agent-System–Developer_READM_v1.0.pdf) |
 
 ---
+<img width="1536" height="1024" alt="Copilot_20260803_230851" src="https://github.com/user-attachments/assets/89bf9952-994b-41b4-9547-b967271e2378" />
 
 ## 📎 Optional Extension: Controller Agent (System Stability Module)
 
