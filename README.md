@@ -33,6 +33,31 @@ All formal specifications and architectural documentation are stored in the `Mul
 
 ---
 
+## 📎 Optional Extension: Controller Agent (System Stability Module)
+
+For developers who want to enhance the Multi-Tag Agent Framework with advanced
+system-level stability and fault tolerance, an optional **Controller Agent**
+module is available.
+
+This module introduces:
+
+- Supervisory meta-agent logic  
+- Continuous agent health monitoring  
+- Automatic recovery flows (soft/hard restart)  
+- Deterministic decision-making for failure handling  
+- Full audit and governance tracking  
+
+👉 **Controller Agent – Full Technical Specification (PDF)**  
+*(Included as an optional add-on to refine and stabilize large agent deployments.)*
+
+You can find the complete technical specification here:
+
+| Document Title | Access Link |
+| :--- | :--- |
+| **Controller Agent** | [View PDF](Technical_Specification-Controller_Agent.pdf)
+
+---
+
 ## ⚙️ Quick Start for Developers
 
 This repository is designed to be production-ready.
